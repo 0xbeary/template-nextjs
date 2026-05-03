@@ -13,17 +13,30 @@ export class MainMenu extends Scene {
 	}
 
 	create() {
-		this.background = this.add.image(512, 384, 'background');
+		const { width, height } = this.scale;
+		const dpr = window.devicePixelRatio || 1;
 
-		this.logo = this.add.image(512, 300, 'logo').setDepth(100);
+		this.background = this.add.image(width / 2, height / 2, 'background')
+			.setDisplaySize(width, height);
 
-		this.title = this.add.text(512, 460, 'Main Menu', {
-			fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-			stroke: '#000000', strokeThickness: 8,
+		this.logo = this.add.image(width / 2, height * 0.39, 'logo').setDepth(100);
+
+		this.title = this.add.text(width / 2, height * 0.6, 'Main Menu', {
+			fontFamily: 'Arial Black', fontSize: 38 * dpr, color: '#ffffff',
+			stroke: '#000000', strokeThickness: 8 * dpr,
 			align: 'center'
 		}).setOrigin(0.5).setDepth(100);
 
+		this.scale.on('resize', this.handleResize, this);
+
 		EventBus.emit('current-scene-ready', this);
+	}
+
+	handleResize(gameSize: Phaser.Structs.Size) {
+		const { width, height } = gameSize;
+		this.background.setPosition(width / 2, height / 2).setDisplaySize(width, height);
+		this.logo.setPosition(width / 2, height * 0.39);
+		this.title.setPosition(width / 2, height * 0.6);
 	}
 
 	changeScene() {
@@ -32,6 +45,7 @@ export class MainMenu extends Scene {
 			this.logoTween = null;
 		}
 
+		this.scale.off('resize', this.handleResize, this);
 		this.scene.start('Game');
 	}
 
@@ -47,8 +61,8 @@ export class MainMenu extends Scene {
 		else {
 			this.logoTween = this.tweens.add({
 				targets: this.logo,
-				x: { value: 750, duration: 3000, ease: 'Back.easeInOut' },
-				y: { value: 80, duration: 1500, ease: 'Sine.easeOut' },
+			x: { value: this.scale.width * 0.73, duration: 3000, ease: 'Back.easeInOut' },
+			y: { value: this.scale.height * 0.1, duration: 1500, ease: 'Sine.easeOut' },
 				yoyo: true,
 				repeat: -1,
 				onUpdate: () => {

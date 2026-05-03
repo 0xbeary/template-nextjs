@@ -27,7 +27,19 @@ export const PhaserGame = forwardRef<IRefPhaserGame, IProps>(function PhaserGame
 
 		}
 
+		const handleResize = () => {
+			if (!game.current) return;
+			const dpr = window.devicePixelRatio || 1;
+			game.current.scale.resize(
+				Math.round(window.innerWidth * dpr),
+				Math.round(window.innerHeight * dpr)
+			);
+		};
+
+		window.addEventListener('resize', handleResize);
+
 		return () => {
+			window.removeEventListener('resize', handleResize);
 			if (game.current) {
 				game.current.destroy(true);
 				if (game.current !== null) {

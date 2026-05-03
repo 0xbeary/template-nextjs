@@ -77,7 +77,7 @@ function App() {
 	return (
 		<div id="app">
 			<PhaserGame ref={phaserRef} currentActiveScene={currentScene} />
-			<div>
+			<div className="ui-overlay">
 				<div>
 					<button className="button" onClick={changeScene}>Change Scene</button>
 				</div>
